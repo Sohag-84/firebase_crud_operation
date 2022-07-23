@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,12 +36,21 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
     TaskSnapshot _taskSnapshot = await _uploadTask;
     imageUrl = await _taskSnapshot.ref.getDownloadURL();
     print("image url: ${imageUrl}");
+    CollectionReference _courseRef = FirebaseFirestore.instance.collection("Courses");
+    
+    _courseRef.add({
+      'title': _titleController.text,
+      'description': _descriptionController.text,
+      'image': imageUrl
+    });
+    print("Successfully added");
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 500,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
