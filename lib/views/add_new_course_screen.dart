@@ -64,6 +64,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
           children: [
             TextFormField(
               controller: _titleController,
+              textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                   hintText: "Enter course title",
                   border: OutlineInputBorder(
@@ -72,6 +73,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
             SizedBox(height: 10),
             TextFormField(
               controller: _descriptionController,
+              textInputAction: TextInputAction.done,
               decoration: InputDecoration(
                 hintText: "Enter course description",
                 border: OutlineInputBorder(

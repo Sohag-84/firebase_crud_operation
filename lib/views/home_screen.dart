@@ -23,6 +23,17 @@ class _HomeScreenState extends State<HomeScreen> {
   final Stream<QuerySnapshot> _courseStream =
       FirebaseFirestore.instance.collection("Courses").snapshots();
 
+  Future<void> deleteCourse(selectedDocument) {
+    return FirebaseFirestore.instance
+        .collection("Courses")
+        .doc(selectedDocument)
+        .delete()
+        .then((value) => print("Course has been deleted"))
+        .catchError(
+          (onError) => print("Failed to delete user: ${onError}"),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,27 +63,73 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+              Map<String, dynamic> data =
+                  document.data()! as Map<String, dynamic>;
               return Padding(
-                padding: const EdgeInsets.only(top: 20.0,left: 15,right: 15),
-                child: Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.greenAccent,
-                    borderRadius: BorderRadius.circular(10)
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Expanded(child: Image.network(data['image'],fit: BoxFit.cover,)),
-                        SizedBox(height: 5),
-                        Text(data['course_title'],style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700,),),
-                        SizedBox(height: 5),
-                        Text(data['course_description'],style: TextStyle(color: Colors.black.withOpacity(.50)),),
-                      ],
+                padding: const EdgeInsets.only(top: 20.0, left: 15, right: 15),
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                          color: Colors.greenAccent,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Expanded(
+                                child: Image.network(
+                              data['image'],
+                              fit: BoxFit.cover,
+                            )),
+                            SizedBox(height: 5),
+                            Text(
+                              data['course_title'],
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              data['course_description'],
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(.50)),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      right: 0,
+                      child: Card(
+                        child: SizedBox(
+                          width: 100,
+                          height: 40,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed: null,
+                                icon: Icon(
+                                  Icons.edit_outlined,
+                                  color: Colors.lightGreen,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: ()=> deleteCourse(document.id),
+                                icon: Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               );
             }).toList(),
