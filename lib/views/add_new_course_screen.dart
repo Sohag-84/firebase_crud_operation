@@ -39,8 +39,8 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
     CollectionReference _courseRef = FirebaseFirestore.instance.collection("Courses");
     
     _courseRef.add({
-      'title': _titleController.text,
-      'description': _descriptionController.text,
+      'course_title': _titleController.text,
+      'course_description': _descriptionController.text,
       'image': imageUrl
     });
     print("Successfully added");
