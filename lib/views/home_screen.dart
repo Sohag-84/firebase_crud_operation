@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/views/add_new_course_screen.dart';
+import 'package:flutter_application_1/views/update_course.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -32,6 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
         .catchError(
           (onError) => print("Failed to delete user: ${onError}"),
         );
+  }
+
+  Future<void> updateCourse({
+    required selectedDocumentId,
+    required courseTitle,
+    required courseDescription,
+    required courseImage,
+  }) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => UpdateCourseScreen(
+        documentId: selectedDocumentId,
+        courseTitle: courseTitle,
+        courseDescription: courseDescription,
+        courseImage: courseImage,
+      ),
+    );
   }
 
   @override
@@ -111,14 +131,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               IconButton(
-                                onPressed: null,
+                                onPressed: () => updateCourse(
+                                  selectedDocumentId: document.id,
+                                  courseTitle: data['course_title'],
+                                  courseDescription: data['course_description'],
+                                  courseImage: data['image'],
+                                ),
                                 icon: Icon(
                                   Icons.edit_outlined,
                                   color: Colors.lightGreen,
                                 ),
                               ),
                               IconButton(
-                                onPressed: ()=> deleteCourse(document.id),
+                                onPressed: () => deleteCourse(document.id),
                                 icon: Icon(
                                   Icons.delete_outline,
                                   color: Colors.red,
