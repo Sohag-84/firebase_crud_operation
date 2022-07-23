@@ -18,6 +18,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
   final _descriptionController = TextEditingController();
 
   XFile? _courseImage;
+  String? imageUrl;
 
   _chooseImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -25,7 +26,16 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
     setState(() {});
   }
 
-
+  //for upload image in the firebase storage:
+  UploadData() async{
+    FirebaseStorage _storage = FirebaseStorage.instance;
+    File _imageFile = File(_courseImage!.path);
+    UploadTask _uploadTask =
+    _storage.ref("images").child(_courseImage!.name).putFile(_imageFile);
+    TaskSnapshot _taskSnapshot = await _uploadTask;
+    imageUrl = await _taskSnapshot.ref.getDownloadURL();
+    print("image url: ${imageUrl}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +90,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => UploadData(),
               child: Text("Add new course"),
             ),
             SizedBox(
